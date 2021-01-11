@@ -51,7 +51,7 @@ Route::get('/competitionDetail/{id}','CompetitionController@competitionDetail');
 
 //participate in competition
 Route::get('/participate/{id}','CompetitionController@participate');
-
+Route::get('/participate_view','CompetitionController@participateView')->name('competition.participateView');
 
 // user and freelancer profile edit 
 

@@ -12,24 +12,26 @@
 			</div>
 		</div>
 		<div class="row ">
-			<div class="col-md-4">
-
-				@foreach($pro_master as $p)
-					<div class="" style="background-color:#eee;padding:40px 18px 40px 8px; ">
-						<ul type="none">
-
-
-					  		@foreach($competition as $c)
-					  			@if($p->id == $c->pro_id)
-					  				<li>Competiton Name : {{ $c->competition_name }} </li>	
-					  				<li>Registration Last Date :{{$c->reg_}}</li>			
-					  				<li>Registration Last Date :{{$c->reg_deadline}}</li>	
-					  			@endif
-					  		@endforeach
-					  
-							<li>Skill : 
-							  @foreach($pro_fskill as $pf)
-							  	@if($p->id==$pf->pro_id)
+			<table class="table">
+				<tr>
+					<td>Competiton Name </td>
+					<td>Registration Last Date :</td>
+					<td>Skill</td>
+					<td>No Of Participant</td>
+					<td colspan="3"><center>Action</center></td>
+				</tr>
+			@foreach($pro_master as $p)
+				@foreach($competition as $c)
+					<?php $count=0;?>
+					<tr>
+					@if($p->id == $c->pro_id && $c->reg_deadline>date('Y-m-d'))
+						
+						<td>{{ $c->competition_name }} </td>	
+						<td>{{$c->reg_deadline}}</td>
+						<td>
+							 
+							@foreach($pro_fskill as $pf)
+							 	@if($p->id==$pf->pro_id)
 							  		@foreach($skill as $s)
 							  			@if($s->id == $pf->skill_id)
 							  				{{ $s->skill}},
@@ -37,16 +39,25 @@
 							  		@endforeach
 							  	@endif
 							  @endforeach
-							</li>
+						</td>
+						<td>	
+							@foreach($competition_participant as $compPart)
+								@if($compPart->comp_id == $c->id)
+									<?php $count++ ?>
+								@endif
+							@endforeach
+							{{ $count }}
+						</td>
+						<td><a class="btn btn-primary" href="{{ URL::to('competitionDetail/'.$p->id) }}" role="button">View</a>
+						</td>
+						<td><a class="btn btn-success" href="{{ URL::to('participate/'.$p->id) }}" role="button">Participate</a></td>
+						<td><a class="btn btn-danger" href="{{ URL::to('participate/'.$p->id) }}" role="button">Leave Competition</a></td>
+					@endif
+					</tr>
 
-					  
-						</ul>
-						<br>
-						<center><a class="btn btn-primary btn-lg" href="{{ URL::to('competitionDetail/'.$p->id) }}" role="button">Learn more</a></center>
-					</div>
-					
 				@endforeach
-			</div>
+			@endforeach
+			</table>
 		</div>
 	</div>
 </div>

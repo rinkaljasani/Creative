@@ -12,11 +12,7 @@ use App\Competition_participant;
 
 class CompetitionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function __construct()
     {
         $this->middleware('auth');
@@ -24,87 +20,15 @@ class CompetitionController extends Controller
 
     public function index()
     {
-        // $skill= new Skill::all();
-        // $pro_master=Project_master::all();
-        // $pro_fskill=Project_fskill::all();
-        // $competition=Competition::all();
-        // return view('Competition',['skill'=>$skill , 'pro_master'=>$pro_master, 'competition'=>$competition,'pro_fskill'=>$pro_fskill]);
-
-
+     
         return View('Competition')
         ->with('skill', Skill::all())
         ->with('pro_fskill', Project_fskill::all())
         ->with('pro_master', Project_master::all())
-        ->with('competition', Competition::all()); 
+        ->with('competition', Competition::all())
+        ->with('competition_participant', Competition_participant::all()); 
             
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
 
     public function competitionDetail(Request $request)
     {   
@@ -123,13 +47,33 @@ class CompetitionController extends Controller
 
     public function participate(Request $request)
     {
-        $comp = new Competition_participant();
-        $comp->comp_id=$request->id;
-        $comp->user_id = Auth::id();
-        $comp->sample_data="";
-        $comp->status=0;
-        $comp->save();
+        $comp_id=$request->id;
+        $user_id = Auth::id();
+        $userPart=DB::table('competition_participants')
+                ->where('comp_id',$comp_id)
+                ->where('user_id',$user_id)
+                ->get();
+        $countRow=count($userPart);
+        if($countRow>0)
+        {
 
-        return view('participate');
+        }
+        else
+        {
+
+            $comp = new Competition_participant();
+            $comp->comp_id=$request->id;
+            $comp->user_id = Auth::id();
+            $comp->sample_data="";
+            $comp->status=0;
+            $comp->save();
+   
+        }
+        // return redirect()->route('route.name', [$param]);
+        return redirect()->route('competition.participateView');
+    }
+    public function participateView()
+    {
+        return view('');
     }
 }
